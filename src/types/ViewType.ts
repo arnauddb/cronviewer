@@ -1,0 +1,1 @@
+export type ViewType = 'list' | 'timeline' | 'heatmap';
