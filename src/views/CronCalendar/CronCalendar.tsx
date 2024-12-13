@@ -1,20 +1,13 @@
 import { useState } from 'react'
+import cronParser from 'cron-parser';
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '../../components/Button'
 import { cn } from '../../utils/cn'
 import { getMonthDays, isSameDay, formatMonth } from '../../utils/date'
+import { CronJob } from '../../types/CronJob'
 
 interface CronCalendarProps {
   jobs: CronJob[];
-}
-
-interface CronJob {
-  id: string
-  time: string
-  name: string
-  frequency: string
-  color: 'blue' | 'green' | 'light-green'
-  dates: Date[]
 }
 
 interface CalendarDay {
@@ -23,34 +16,6 @@ interface CalendarDay {
   isToday: boolean
   cronJobs: CronJob[]
 }
-
-// Sample CRON jobs data
-const sampleCronJobs: CronJob[] = [
-  {
-    id: '1',
-    time: '12:30:00',
-    name: 'Cron 1',
-    frequency: 'every 5 days',
-    color: 'blue',
-    dates: Array.from({ length: 31 }, (_, i) => new Date(2024, 11, i + 1)).filter(d => d.getDate() % 5 === 1)
-  },
-  {
-    id: '2',
-    time: '10:45:00',
-    name: 'Cron 2',
-    frequency: 'every 3 days',
-    color: 'green',
-    dates: Array.from({ length: 31 }, (_, i) => new Date(2024, 11, i + 1)).filter(d => d.getDate() % 3 === 1)
-  },
-  {
-    id: '3',
-    time: '00:00:00',
-    name: 'Cron 3',
-    frequency: 'At midnight',
-    color: 'light-green',
-    dates: Array.from({ length: 31 }, (_, i) => new Date(2024, 11, i + 1)).filter(d => d.getDate() % 7 === 1)
-  }
-]
 
 export function CronCalendar({ jobs }: CronCalendarProps) {
   const today = new Date()
@@ -61,10 +26,22 @@ export function CronCalendar({ jobs }: CronCalendarProps) {
     date,
     isCurrentMonth: date.getMonth() === currentDate.getMonth(),
     isToday: isSameDay(date, today),
-    cronJobs: sampleCronJobs.filter(job => 
-      job.dates.some(jobDate => isSameDay(jobDate, date))
-    )
-  }))
+    cronJobs: jobs.filter(job => {
+      try {
+        const interval = cronParser.parseExpression(job.schedule, {
+          currentDate: date,
+          iterator: true
+        });
+        
+        // Just check if the next execution matches our date
+        const next = interval.next().value.toDate();
+        return isSameDay(next, date);
+      } catch (err) {
+        console.error(`Error parsing cron expression for job ${job.id}:`, err);
+        return false;
+      }
+    })
+  }));
 
   const prevMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1))
@@ -121,7 +98,7 @@ export function CronCalendar({ jobs }: CronCalendarProps) {
             className={cn(
               "bg-background p-2 min-h-[120px]",
               !day.isCurrentMonth && "text-muted-foreground",
-              day.isToday && "bg-yellow-50"
+              day.isToday && "bg-yellow-100"
             )}
           >
             <span className={cn(
@@ -136,12 +113,10 @@ export function CronCalendar({ jobs }: CronCalendarProps) {
                   key={job.id}
                   className={cn(
                     "text-xs px-2 py-1 rounded",
-                    job.color === 'blue' && "bg-blue-500 text-white",
-                    job.color === 'green' && "bg-green-500 text-white",
-                    job.color === 'light-green' && "bg-green-200 text-green-800"
+                    "bg-blue-500 text-white",
                   )}
                 >
-                  {job.time} {job.name}: {job.frequency}
+                  {job.name}: {job.schedule}
                 </div>
               ))}
             </div>

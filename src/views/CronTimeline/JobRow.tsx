@@ -1,6 +1,7 @@
+import React from 'react';
 import { Clock } from 'lucide-react';
+import parser from 'cron-parser';
 import { CronJob } from '../../types/CronJob';
-import { STATUS_COLORS } from '../../utils/constants';
 
 interface JobRowProps {
   job: CronJob;
@@ -8,6 +9,34 @@ interface JobRowProps {
 }
 
 export function JobRow({ job, hours }: JobRowProps) {
+
+  const getExecutionHours = () => {
+    try {
+      const interval = parser.parseExpression(job.schedule);
+      const executionHours = new Set<number>();
+      
+      // Get first execution of the day
+      const start = new Date();
+      start.setHours(0, 0, 0, 0);
+      interval.reset(start);
+
+      // Get just the next 24 iterations maximum
+      for (let i = 0; i < 24; i++) {
+        const next = interval.next();
+        if (next.getDate() !== start.getDate()) break;
+        executionHours.add(next.getHours());
+      }
+      
+      return executionHours;
+    } catch (err) {
+      console.error('Invalid cron expression:', err);
+      return new Set<number>();
+    }
+  };
+
+  // Memoize the execution hours to prevent recalculation on re-renders
+  const executionHours = React.useMemo(() => getExecutionHours(), [job.schedule]);
+
   return (
     <div className="flex hover:bg-gray-50">
       <div className="w-64 flex-shrink-0 p-4">
@@ -22,19 +51,16 @@ export function JobRow({ job, hours }: JobRowProps) {
       <div className="flex-1 grid grid-cols-24 relative">
         {hours.map((hour) => (
           <div
-            key={hour}
-            className="col-span-1 border-l border-gray-100 p-2"
-          />
+          key={hour}
+          className={`col-span-1 border-l border-gray-100 p-2 ${
+            executionHours.has(hour) ? 'bg-blue-200' : ''
+          }`}
+        >
+          {executionHours.has(hour) && (
+            <div className="absolute top-0 bottom-0 w-0.5 bg-blue-500 left-1/2 transform -translate-x-1/2" />
+          )}
+        </div>
         ))}
-        {job.status === 'running' && (
-          <div 
-            className={`absolute top-1/2 left-0 transform -translate-y-1/2 h-2 rounded ${STATUS_COLORS[job.status]}`}
-            style={{
-              width: `${(100 / 24) * 2}%`,
-              left: `${(100 / 24) * new Date().getHours()}%`
-            }}
-          />
-        )}
       </div>
     </div>
   );
