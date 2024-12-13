@@ -1,0 +1,30 @@
+[
+  {
+    "id": "1",
+    "name": "Daily Backup",
+    "schedule": "0 0 * * *",
+    "description": "Daily database backup",
+    "category": "Maintenance"
+  },
+  {
+    "id": "2",
+    "name": "Log Rotation",
+    "schedule": "0 */4 * * *",
+    "description": "Rotate and compress logs",
+    "category": "Maintenance"
+  },
+  {
+    "id": "3",
+    "name": "Health Check",
+    "schedule": "*/30 * * * *",
+    "description": "System health monitoring",
+    "category": "Monitoring"
+  },
+  {
+    "id": "4",
+    "name": "Performance Metrics",
+    "schedule": "*/15 * * * *",
+    "description": "Collect performance metrics",
+    "category": "Monitoring"
+  }
+]

@@ -1,4 +1,4 @@
-import { Table, LayoutGrid, CalendarClock } from 'lucide-react';
+import { Table, CalendarRange, LayoutGrid, ChartGantt } from 'lucide-react';
 import { ViewType } from '../types/ViewType';
 
 interface ViewSwitcherProps {
@@ -21,6 +21,17 @@ export function ViewSwitcher({ currentView, onViewChange }: ViewSwitcherProps) {
         CRON Jobs
       </button>
       <button
+        onClick={() => onViewChange('calendar')}
+        className={`flex items-center px-3 py-2 rounded-md text-sm font-medium ${
+          currentView === 'calendar'
+            ? 'bg-blue-100 text-blue-700'
+            : 'text-gray-600 hover:bg-gray-100'
+        }`}
+      >
+        <CalendarRange className="w-4 h-4 mr-2" />
+        Calendar
+      </button>
+      <button
         onClick={() => onViewChange('timeline')}
         className={`flex items-center px-3 py-2 rounded-md text-sm font-medium ${
           currentView === 'timeline'
@@ -28,7 +39,7 @@ export function ViewSwitcher({ currentView, onViewChange }: ViewSwitcherProps) {
             : 'text-gray-600 hover:bg-gray-100'
         }`}
       >
-        <CalendarClock className="w-4 h-4 mr-2" />
+        <ChartGantt className="w-4 h-4 mr-2" />
         Timeline
       </button>
       <button
