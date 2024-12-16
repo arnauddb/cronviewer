@@ -108,17 +108,37 @@ export function CronCalendar({ jobs }: CronCalendarProps) {
               {day.date.getDate()}
             </span>
             <div className="space-y-1">
-              {day.cronJobs.map((job) => (
-                <div
-                  key={job.id}
-                  className={cn(
-                    "text-xs px-2 py-1 rounded",
-                    "bg-blue-500 text-white",
-                  )}
-                >
-                  {job.name}: {job.schedule}
+              {day.cronJobs.length > 3 ? (
+                <div className="group relative">
+                  <div className="text-xs px-2 py-1 rounded bg-blue-500 text-white cursor-help">
+                    {day.cronJobs.length} jobs scheduled
+                  </div>
+                  <div className="absolute left-0 top-full mt-1 z-50 hidden group-hover:block bg-white border rounded-lg shadow-lg p-2 w-64">
+                    <div className="max-h-48 overflow-y-auto">
+                      {day.cronJobs.map((job) => (
+                        <div
+                          key={job.id}
+                          className="text-xs px-2 py-1 mb-1 rounded bg-blue-100 text-blue-800"
+                        >
+                          {job.name}: {job.schedule}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              ))}
+              ) : (
+                day.cronJobs.map((job) => (
+                  <div
+                    key={job.id}
+                    className={cn(
+                      "text-xs px-2 py-1 rounded",
+                      "bg-blue-500 text-white",
+                    )}
+                  >
+                    {job.name}: {job.schedule}
+                  </div>
+                ))
+              )}
             </div>
           </div>
         ))}

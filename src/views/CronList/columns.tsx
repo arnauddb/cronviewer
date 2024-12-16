@@ -69,7 +69,7 @@ const columns = ({deleteJobs, setEditingJob}: {deleteJobs: (ids: string[]) => vo
           </div>
         );
       } catch (error) {
-        return <div>Wrong CRON format</div>;
+        return <div className="text-red-500">Wrong CRON format</div>;
       }
     }
   },

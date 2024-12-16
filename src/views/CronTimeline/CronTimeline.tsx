@@ -9,7 +9,9 @@ interface CronTimelineProps {
 
 export function CronTimeline({ jobs }: CronTimelineProps) {
   const hours = Array.from({ length: 24 }, (_, i) => i);
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
+    () => new Set(jobs.map(job => job.category))
+  );
 
   const jobsByCategory = useMemo(() => {
     return jobs.reduce((acc, job) => {

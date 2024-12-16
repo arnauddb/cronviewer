@@ -16,7 +16,7 @@
   {
     "id": "3",
     "name": "Health Check",
-    "schedule": "*/30 * * * *",
+    "schedule": "*/5 * * * *",
     "description": "System health monitoring",
     "category": "Monitoring"
   },

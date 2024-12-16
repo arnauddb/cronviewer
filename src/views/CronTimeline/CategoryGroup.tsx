@@ -15,7 +15,7 @@ export function CategoryGroup({ category, jobs, hours, isExpanded, onToggle }: C
     <div className="border-b border-gray-200">
       <button
         onClick={onToggle}
-        className="w-full flex items-center px-4 py-2 bg-gray-50 hover:bg-gray-100 transition-colors"
+        className="w-full flex items-center px-4 py-2 bg-blue-100 hover:bg-gray-100 transition-colors"
       >
         {isExpanded ? (
           <ChevronDown className="w-4 h-4 text-gray-500 mr-2" />
