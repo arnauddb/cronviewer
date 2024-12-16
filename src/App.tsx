@@ -12,7 +12,10 @@ function App() {
   const [jobs, setJobs] = useState<CronJob[]>([]);
 
   useEffect(() => {
-    setJobs([])
+    const storedJobs = localStorage.getItem('cronviewer-jobs');
+    if (storedJobs) {
+      setJobs(JSON.parse(storedJobs));
+    }
   }, []);
   
   return (
@@ -43,7 +46,10 @@ function App() {
               <TabsContent value="list">
                 <CronList 
                   jobs={jobs}
-                  updateJobs={setJobs} />
+                  updateJobs={jobs => {
+                    setJobs(jobs);
+                    localStorage.setItem('cronviewer-jobs', JSON.stringify(jobs));
+                  }} />
               </TabsContent>
               <TabsContent value="calendar">
                 <CronCalendar jobs={jobs} />
