@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CalendarClock } from 'lucide-react';
+import { CalendarClock, Github } from 'lucide-react';
 import { CronList } from './views/CronList/CronList';
 import { CronCalendar } from './views/CronCalendar/CronCalendar';
 import { CronTimeline } from './views/CronTimeline/CronTimeline';
@@ -22,7 +22,7 @@ function App() {
     <div className="min-h-screen bg-slate-100 overflow-auto">
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow">
-          <div className="px-4 py-5 sm:px-6">
+          <div className="px-5 py-5 sm:px-6">
             <div className="flex justify-between items-center">
               <div>
                 <h1 className="flex flex-row items-center text-2xl font-bold text-gray-900">
@@ -33,6 +33,9 @@ function App() {
                   Visualize when your scheduled jobs run throughout the day
                 </p>
               </div>
+              <a href="https://github.com/arnauddb/cronviewer" target="_blank" rel="noopener noreferrer">
+                <Github className="w-6 h-6" />
+              </a>
             </div>
           </div>
           <Tabs defaultValue="list" className="w-full">
@@ -42,7 +45,7 @@ function App() {
               <TabsTrigger value="timeline">Timeline</TabsTrigger>
               <TabsTrigger value="heatmap">Heatmap</TabsTrigger>
             </TabsList>
-            <div className="px-4 py-5 sm:p-6">
+            <div className="px-6 py-5 sm:p-6">
               <TabsContent value="list">
                 <CronList 
                   jobs={jobs}

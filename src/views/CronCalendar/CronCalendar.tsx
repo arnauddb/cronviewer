@@ -56,7 +56,7 @@ export function CronCalendar({ jobs }: CronCalendarProps) {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-4">
+    <div className="w-full max-w-6xl mx-auto">
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-2xl font-semibold">{formatMonth(currentDate)}</h2>
